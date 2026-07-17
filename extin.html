@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0DAA70" />
+  <meta name="description" content="YE Pagos: gestión de facturas y atención personalizada en toda Colombia." />
+  <title>YE Pagos | Gestión de facturas</title>
+
+  <style>
+    :root{
+      --green:#0DAA70;
+      --green-dark:#087A53;
+      --blue:#1677FF;
+      --navy:#102A56;
+      --white:#FFFFFF;
+      --bg:#F4F9F7;
+      --muted:#758195;
+      --line:#DDE9E5;
+      --danger:#D92D20;
+      --shadow:0 22px 60px rgba(16,42,86,.12);
+      --radius:28px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--navy);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(13,170,112,.12), transparent 28rem),
+        radial-gradient(circle at 100% 15%, rgba(22,119,255,.10), transparent 26rem),
+        var(--bg);
+    }
+
+    button,input{font:inherit}
+    button{cursor:pointer}
+
+    .app-shell{
+      width:min(100%, 1120px);
+      margin:0 auto;
+      min-height:100vh;
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:42px;
+      align-items:center;
+      padding:32px;
+    }
+
+    .brand-panel{
+      padding:24px 10px;
+    }
+
+    .brand{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      font-weight:900;
+      letter-spacing:-1.2px;
+      font-size:31px;
+      margin-bottom:46px;
+    }
+
+    .brand .ye{color:var(--green)}
+    .brand .pagos{color:var(--navy)}
+    .brand-mark{
+      width:29px;
+      height:29px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      background:linear-gradient(135deg,var(--green),var(--blue));
+      box-shadow:0 8px 20px rgba(13,170,112,.25);
+      font-size:15px;
+    }
+
+    .hero-art{
+      width:min(100%, 430px);
+      aspect-ratio:1.25/1;
+      margin:0 auto 30px;
+      border-radius:38% 62% 54% 46% / 48% 42% 58% 52%;
+      background:linear-gradient(145deg,rgba(13,170,112,.12),rgba(22,119,255,.14));
+      display:grid;
+      place-items:center;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .phone{
+      width:128px;
+      height:222px;
+      border:8px solid var(--navy);
+      background:white;
+      border-radius:26px;
+      padding:24px 13px 14px;
+      box-shadow:0 24px 45px rgba(16,42,86,.22);
+      position:relative;
+      z-index:3;
+    }
+
+    .phone::before{
+      content:"";
+      position:absolute;
+      width:46px;
+      height:6px;
+      border-radius:999px;
+      background:var(--navy);
+      top:9px;
+      left:50%;
+      transform:translateX(-50%);
+    }
+
+    .phone-line{
+      height:9px;
+      border-radius:999px;
+      background:#DCE7E3;
+      margin:8px 0;
+    }
+
+    .phone-line.green{background:rgba(13,170,112,.55);width:78%}
+    .phone-line.blue{background:rgba(22,119,255,.55);width:62%}
+    .phone-line.short{width:48%}
+
+    .phone-check{
+      width:26px;height:26px;border-radius:50%;
+      display:grid;place-items:center;
+      margin:15px auto 0;
+      color:#fff;background:var(--green);
+      font-weight:900;
+    }
+
+    .bill{
+      position:absolute;
+      width:112px;
+      min-height:88px;
+      border-radius:17px;
+      background:#fff;
+      box-shadow:0 16px 34px rgba(16,42,86,.12);
+      padding:14px;
+      transform:rotate(-8deg);
+      left:10%;
+      top:31%;
+      z-index:2;
+    }
+
+    .bill.right{
+      left:auto;
+      right:8%;
+      top:26%;
+      transform:rotate(9deg);
+    }
+
+    .bill b{font-size:12px}
+    .mini-line{height:5px;background:#DCE7E3;border-radius:99px;margin:7px 0}
+    .mini-line.accent{background:rgba(22,119,255,.35);width:72%}
+
+    .hero-copy h1{
+      margin:0;
+      font-size:clamp(34px,4.5vw,58px);
+      line-height:1.02;
+      letter-spacing:-2.4px;
+      max-width:650px;
+    }
+
+    .hero-copy h1 span{
+      background:linear-gradient(90deg,var(--green),var(--blue));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .hero-copy p{
+      color:var(--muted);
+      line-height:1.7;
+      max-width:580px;
+      font-size:17px;
+      margin:18px 0 0;
+    }
+
+    .trust-chips{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:25px;
+    }
+
+    .chip{
+      padding:10px 13px;
+      border:1px solid rgba(13,170,112,.22);
+      background:rgba(255,255,255,.7);
+      border-radius:999px;
+      color:var(--green-dark);
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .form-card{
+      width:100%;
+      max-width:510px;
+      justify-self:end;
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(255,255,255,.9);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:28px;
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+    }
+
+    .card-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:22px;
+    }
+
+    .mini-brand{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-weight:900;
+      font-size:20px;
+    }
+
+    .help-btn{
+      border:1px solid var(--line);
+      background:white;
+      color:var(--blue);
+      padding:9px 13px;
+      border-radius:999px;
+      font-weight:800;
+    }
+
+    .progress{
+      height:7px;
+      border-radius:999px;
+      background:#E9F1EE;
+      overflow:hidden;
+      margin-bottom:25px;
+    }
+
+    .progress span{
+      display:block;
+      height:100%;
+      width:50%;
+      border-radius:inherit;
+      background:linear-gradient(90deg,var(--green),var(--blue));
+      transition:width .35s ease;
+    }
+
+    .step{display:none;animation:fadeIn .32s ease}
+    .step.active{display:block}
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(8px)}
+      to{opacity:1;transform:none}
+    }
+
+    .step-kicker{
+      color:var(--green-dark);
+      font-weight:900;
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:.09em;
+    }
+
+    .step h2{
+      margin:8px 0 8px;
+      font-size:30px;
+      letter-spacing:-1px;
+    }
+
+    .step-description{
+      color:var(--muted);
+      line-height:1.55;
+      margin:0 0 24px;
+    }
+
+    .field{margin-bottom:17px}
+    .field label{
+      display:block;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:14px;
+    }
+
+    .input-wrap{position:relative}
+    .input-icon{
+      position:absolute;
+      left:16px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:18px;
+      opacity:.72;
+      pointer-events:none;
+    }
+
+    .input-prefix{
+      position:absolute;
+      left:16px;
+      top:50%;
+      transform:translateY(-50%);
+      font-weight:900;
+      color:var(--navy);
+      padding-right:12px;
+      border-right:1px solid var(--line);
+    }
+
+    input{
+      width:100%;
+      height:58px;
+      border:1.5px solid var(--line);
+      border-radius:17px;
+      background:#fff;
+      color:var(--navy);
+      outline:none;
+      padding:0 16px 0 49px;
+      transition:.2s ease;
+    }
+
+    input.phone-input{padding-left:72px}
+
+    input::placeholder{color:#A4AFB9}
+
+    input:focus{
+      border-color:var(--blue);
+      box-shadow:0 0 0 4px rgba(22,119,255,.10);
+    }
+
+    input.invalid{
+      border-color:var(--danger);
+      box-shadow:0 0 0 4px rgba(217,45,32,.08);
+    }
+
+    .error{
+      min-height:18px;
+      margin:6px 2px 0;
+      color:var(--danger);
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:13px;
+    }
+
+    .checkbox-row{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      margin:4px 0 8px;
+    }
+
+    .checkbox-row input{
+      width:18px;
+      height:18px;
+      padding:0;
+      margin-top:2px;
+      accent-color:var(--green);
+      flex:0 0 auto;
+    }
+
+    .checkbox-row label{
+      font-size:13px;
+      line-height:1.45;
+      color:var(--muted);
+    }
+
+    .checkbox-row a{color:var(--blue);font-weight:800;text-decoration:none}
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:20px;
+    }
+
+    .actions.two{grid-template-columns:.38fr .62fr}
+
+    .btn{
+      min-height:58px;
+      border:none;
+      border-radius:17px;
+      font-weight:900;
+      transition:.2s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+    }
+
+    .btn-primary{
+      color:#fff;
+      background:linear-gradient(90deg,var(--green),var(--blue));
+      box-shadow:0 14px 28px rgba(13,170,112,.22);
+    }
+
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-primary:active{transform:translateY(1px)}
+
+    .btn-primary:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none;
+      box-shadow:none;
+    }
+
+    .btn-secondary{
+      color:var(--navy);
+      background:#EEF4F2;
+    }
+
+    .spinner{
+      width:18px;height:18px;
+      border:2px solid rgba(255,255,255,.35);
+      border-top-color:#fff;
+      border-radius:50%;
+      animation:spin .7s linear infinite;
+      display:none;
+    }
+
+    .is-loading .spinner{display:block}
+    .is-loading .btn-text{opacity:.85}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .security-note{
+      margin-top:22px;
+      padding:14px;
+      border-radius:15px;
+      background:#F5FAF8;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.55;
+      border:1px solid #E2F0EB;
+    }
+
+    .security-note strong{color:var(--green-dark)}
+
+    .services{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:9px;
+      margin-top:20px;
+    }
+
+    .service{
+      text-align:center;
+      padding:11px 6px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .service span{display:block;font-size:20px;margin-bottom:5px}
+
+    .success-wrap{text-align:center;padding:12px 3px 2px}
+
+    .success-icon{
+      width:88px;height:88px;
+      border-radius:50%;
+      display:grid;place-items:center;
+      margin:0 auto 20px;
+      color:#fff;
+      font-size:42px;
+      font-weight:900;
+      background:linear-gradient(135deg,var(--green),var(--blue));
+      box-shadow:0 18px 38px rgba(13,170,112,.25);
+      animation:pop .45s cubic-bezier(.2,.9,.3,1.3);
+    }
+
+    @keyframes pop{
+      from{transform:scale(.5);opacity:0}
+      to{transform:scale(1);opacity:1}
+    }
+
+    .success-wrap h2{font-size:31px;margin:0 0 12px}
+    .success-wrap p{color:var(--muted);line-height:1.65;margin:0 0 10px}
+
+    .footer-links{
+      margin-top:18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px 14px;
+      justify-content:center;
+      font-size:12px;
+    }
+
+    .footer-links button{
+      border:none;
+      background:none;
+      color:var(--blue);
+      font-weight:800;
+      padding:0;
+    }
+
+    dialog{
+      width:min(92vw,520px);
+      border:none;
+      border-radius:22px;
+      padding:0;
+      box-shadow:var(--shadow);
+    }
+
+    dialog::backdrop{background:rgba(16,42,86,.45);backdrop-filter:blur(4px)}
+
+    .modal-content{padding:25px}
+    .modal-content h3{margin:0 0 10px;font-size:24px}
+    .modal-content p{color:var(--muted);line-height:1.65}
+    .modal-close{
+      width:100%;
+      margin-top:10px;
+      min-height:48px;
+      border:none;
+      border-radius:14px;
+      background:var(--navy);
+      color:white;
+      font-weight:900;
+    }
+
+    @media (max-width: 860px){
+      body{background:#fff}
+      .app-shell{
+        display:block;
+        padding:0;
+        min-height:100vh;
+      }
+
+      .brand-panel{
+        padding:28px 22px 12px;
+        background:
+          radial-gradient(circle at 10% 0%, rgba(13,170,112,.13), transparent 20rem),
+          radial-gradient(circle at 100% 10%, rgba(22,119,255,.11), transparent 18rem),
+          #F8FBFA;
+      }
+
+      .brand{margin-bottom:20px;font-size:26px}
+      .hero-art{
+        width:min(85vw,340px);
+        margin-bottom:20px;
+      }
+
+      .hero-copy{text-align:center}
+      .hero-copy h1{font-size:35px;letter-spacing:-1.4px}
+      .hero-copy p{font-size:15px}
+      .trust-chips{justify-content:center}
+
+      .form-card{
+        max-width:none;
+        border-radius:28px 28px 0 0;
+        padding:24px 20px calc(25px + env(safe-area-inset-bottom));
+        box-shadow:0 -12px 42px rgba(16,42,86,.08);
+        border:none;
+        backdrop-filter:none;
+      }
+    }
+
+    @media (max-width: 520px){
+      .hero-art{width:78vw}
+      .bill{width:88px;left:4%}
+      .bill.right{right:2%}
+      .phone{width:110px;height:195px}
+      .hero-copy h1{font-size:31px}
+      .grid-2{grid-template-columns:1fr}
+      .actions.two{grid-template-columns:1fr}
+      .btn-secondary{order:2}
+      .services{grid-template-columns:repeat(2,1fr)}
+      .step h2{font-size:27px}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      *,*::before,*::after{
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+        scroll-behavior:auto!important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app-shell">
+    <section class="brand-panel" aria-label="Presentación de YE Pagos">
+      <div class="brand" aria-label="YE Pagos">
+        <span class="ye">YE</span><span class="pagos">Pagos</span>
+        <span class="brand-mark" aria-hidden="true">✓</span>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="bill">
+          <div class="mini-line accent"></div>
+          <div class="mini-line"></div>
+          <div class="mini-line"></div>
+          <b>$150.200</b>
+        </div>
+
+        <div class="phone">
+          <div class="phone-line green"></div>
+          <div class="phone-line"></div>
+          <div class="phone-line blue"></div>
+          <div class="phone-line short"></div>
+          <div class="phone-line green"></div>
+          <div class="phone-check">✓</div>
+        </div>
+
+        <div class="bill right">
+          <div class="mini-line accent"></div>
+          <div class="mini-line"></div>
+          <div class="mini-line"></div>
+          <b>$45.000</b>
+        </div>
+      </div>
+
+      <div class="hero-copy">
+        <h1>Gestiona tus facturas <span>fácilmente</span></h1>
+        <p>Atención personalizada para usuarios en toda Colombia. Completa tus datos y uno de nuestros asesores se comunicará contigo.</p>
+      </div>
+
+      <div class="trust-chips" aria-label="Beneficios">
+        <span class="chip">✓ Cobertura nacional</span>
+        <span class="chip">✓ Atención personalizada</span>
+        <span class="chip">✓ Protección de datos</span>
+      </div>
+    </section>
+
+    <section class="form-card" aria-label="Formulario de solicitud">
+      <div class="card-top">
+        <div class="mini-brand">
+          <span style="color:var(--green)">YE</span>
+          <span>Pagos</span>
+        </div>
+        <button class="help-btn" type="button" data-modal="helpModal">ⓘ Ayuda</button>
+      </div>
+
+      <div class="progress" aria-label="Progreso del formulario">
+        <span id="progressBar"></span>
+      </div>
+
+      <form id="paymentForm" novalidate>
+        <section class="step active" id="step1" aria-labelledby="step1Title">
+          <div class="step-kicker">Paso 1 de 2</div>
+          <h2 id="step1Title">Ingresa tu cédula</h2>
+          <p class="step-description">Usaremos este dato únicamente para gestionar tu solicitud.</p>
+
+          <div class="field">
+            <label for="cedula">Número de cédula</label>
+            <div class="input-wrap">
+              <span class="input-icon" aria-hidden="true">🪪</span>
+              <input
+                id="cedula"
+                name="cedula"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                maxlength="10"
+                placeholder="Ejemplo: 1234567890"
+                aria-describedby="cedulaError"
+              />
+            </div>
+            <div class="error" id="cedulaError" aria-live="polite"></div>
+          </div>
+
+          <div class="actions">
+            <button class="btn btn-primary" id="continueBtn" type="button" disabled>
+              Continuar <span aria-hidden="true">→</span>
+            </button>
+          </div>
+
+          <div class="services" aria-label="Servicios disponibles">
+            <div class="service"><span>💡</span>Energía</div>
+            <div class="service"><span>💧</span>Agua</div>
+            <div class="service"><span>🔥</span>Gas</div>
+            <div class="service"><span>🌐</span>Internet</div>
+            <div class="service"><span>📱</span>Telefonía</div>
+            <div class="service"><span>➕</span>Otros</div>
+          </div>
+        </section>
+
+        <section class="step" id="step2" aria-labelledby="step2Title">
+          <div class="step-kicker">Paso 2 de 2</div>
+          <h2 id="step2Title">Completa tus datos</h2>
+          <p class="step-description">Un asesor utilizará esta información para comunicarse contigo.</p>
+
+          <div class="grid-2">
+            <div class="field">
+              <label for="nombres">Nombres</label>
+              <div class="input-wrap">
+                <span class="input-icon" aria-hidden="true">👤</span>
+                <input id="nombres" name="nombres" type="text" autocomplete="given-name" placeholder="Tus nombres" aria-describedby="nombresError" />
+              </div>
+              <div class="error" id="nombresError" aria-live="polite"></div>
+            </div>
+
+            <div class="field">
+              <label for="apellidos">Apellidos</label>
+              <div class="input-wrap">
+                <span class="input-icon" aria-hidden="true">👤</span>
+                <input id="apellidos" name="apellidos" type="text" autocomplete="family-name" placeholder="Tus apellidos" aria-describedby="apellidosError" />
+              </div>
+              <div class="error" id="apellidosError" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="telefono">Número de teléfono</label>
+            <div class="input-wrap">
+              <span class="input-prefix" aria-hidden="true">+57</span>
+              <input
+                class="phone-input"
+                id="telefono"
+                name="telefono"
+                type="tel"
+                inputmode="numeric"
+                autocomplete="tel-national"
+                maxlength="10"
+                placeholder="3001234567"
+                aria-describedby="telefonoError"
+              />
+            </div>
+            <div class="error" id="telefonoError" aria-live="polite"></div>
+          </div>
+
+          <div class="checkbox-row">
+            <input id="privacy" name="privacy" type="checkbox" />
+            <label for="privacy">
+              Acepto la
+              <a href="#" data-modal="privacyModal">política de tratamiento de datos</a>
+              y autorizo el contacto de un asesor.
+            </label>
+          </div>
+          <div class="error" id="privacyError" aria-live="polite"></div>
+
+          <div class="actions two">
+            <button class="btn btn-secondary" id="backBtn" type="button">Volver</button>
+            <button class="btn btn-primary" id="submitBtn" type="submit">
+              <span class="spinner" aria-hidden="true"></span>
+              <span class="btn-text">Enviar solicitud</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="step" id="step3" aria-labelledby="step3Title" aria-live="polite">
+          <div class="success-wrap">
+            <div class="success-icon" aria-hidden="true">✓</div>
+            <h2 id="step3Title">¡Solicitud recibida!</h2>
+            <p>Gracias por comunicarte con <strong>YE Pagos</strong>. Uno de nuestros asesores se pondrá en contacto contigo para ayudarte con tu solicitud.</p>
+            <p><strong>Horario de atención:</strong> lunes a sábado.</p>
+
+            <div class="actions">
+              <button class="btn btn-primary" id="restartBtn" type="button">Realizar otra solicitud</button>
+            </div>
+          </div>
+        </section>
+      </form>
+
+      <div class="security-note">
+        <strong>Importante:</strong> YE Pagos no solicitará claves, contraseñas, códigos de seguridad, números completos de tarjetas ni códigos enviados por SMS.
+      </div>
+
+      <div class="footer-links">
+        <button type="button" data-modal="privacyModal">Privacidad</button>
+        <button type="button" data-modal="dataModal">Tratamiento de datos</button>
+        <button type="button" data-modal="termsModal">Términos y condiciones</button>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="helpModal">
+    <div class="modal-content">
+      <h3>¿Necesitas ayuda?</h3>
+      <p>Ingresa primero tu número de cédula. Luego completa tus nombres, apellidos y número de teléfono. Al finalizar, uno de nuestros asesores se pondrá en contacto contigo.</p>
+      <button class="modal-close" type="button">Entendido</button>
+    </div>
+  </dialog>
+
+  <dialog id="privacyModal">
+    <div class="modal-content">
+      <h3>Política de privacidad</h3>
+      <p>YE Pagos utilizará la información suministrada únicamente para gestionar la solicitud y establecer contacto con el usuario. Este texto es informativo y debe ser reemplazado por la política legal definitiva de la empresa.</p>
+      <button class="modal-close" type="button">Cerrar</button>
+    </div>
+  </dialog>
+
+  <dialog id="dataModal">
+    <div class="modal-content">
+      <h3>Tratamiento de datos</h3>
+      <p>Al enviar el formulario, el usuario autoriza el tratamiento de sus datos para fines de atención, contacto y seguimiento de la solicitud. Antes de publicar la página, incluye la información legal, el responsable y los canales oficiales para consultas o eliminación de datos.</p>
+      <button class="modal-close" type="button">Cerrar</button>
+    </div>
+  </dialog>
+
+  <dialog id="termsModal">
+    <div class="modal-content">
+      <h3>Términos y condiciones</h3>
+      <p>YE Pagos actúa como canal de gestión y atención. La disponibilidad de servicios puede variar según el proveedor y la ubicación. Este contenido es de ejemplo y debe ser revisado legalmente antes de su publicación.</p>
+      <button class="modal-close" type="button">Cerrar</button>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      const form = document.getElementById('paymentForm');
+      const steps = [...document.querySelectorAll('.step')];
+      const progressBar = document.getElementById('progressBar');
+
+      const cedula = document.getElementById('cedula');
+      const nombres = document.getElementById('nombres');
+      const apellidos = document.getElementById('apellidos');
+      const telefono = document.getElementById('telefono');
+      const privacy = document.getElementById('privacy');
+
+      const continueBtn = document.getElementById('continueBtn');
+      const backBtn = document.getElementById('backBtn');
+      const submitBtn = document.getElementById('submitBtn');
+      const restartBtn = document.getElementById('restartBtn');
+
+      let isSubmitting = false;
+
+      function digitsOnly(input) {
+        input.value = input.value.replace(/\D/g, '');
+      }
+
+      function lettersAndSpacesOnly(input) {
+        input.value = input.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]/g, '');
+      }
+
+      function setError(input, message) {
+        const error = document.getElementById(input.id + 'Error');
+        input.classList.toggle('invalid', Boolean(message));
+        input.setAttribute('aria-invalid', Boolean(message));
+        if (error) error.textContent = message;
+      }
+
+      function showStep(index) {
+        steps.forEach((step, i) => step.classList.toggle('active', i === index));
+        progressBar.style.width = index === 0 ? '50%' : '100%';
+
+        const target = steps[index].querySelector('input, button');
+        if (target) setTimeout(() => target.focus(), 80);
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function validateCedula(showMessage = true) {
+        const value = cedula.value.trim();
+        const valid = /^\d{6,10}$/.test(value);
+
+        if (showMessage) {
+          if (!value) setError(cedula, 'Ingresa tu número de cédula.');
+          else if (!valid) setError(cedula, 'La cédula debe tener entre 6 y 10 números.');
+          else setError(cedula, '');
+        }
+
+        continueBtn.disabled = !valid;
+        return valid;
+      }
+
+      function validateName(input, label) {
+        const value = input.value.trim();
+        if (!value) {
+          setError(input, `Ingresa tus ${label.toLowerCase()}.`);
+          return false;
+        }
+        if (value.length < 2) {
+          setError(input, `${label} debe tener mínimo 2 caracteres.`);
+          return false;
+        }
+        setError(input, '');
+        return true;
+      }
+
+      function validatePhone() {
+        const value = telefono.value.trim();
+        if (!value) {
+          setError(telefono, 'Ingresa tu número de teléfono.');
+          return false;
+        }
+        if (!/^3\d{9}$/.test(value)) {
+          setError(telefono, 'Ingresa un número celular colombiano válido de 10 dígitos.');
+          return false;
+        }
+        setError(telefono, '');
+        return true;
+      }
+
+      function validatePrivacy() {
+        const error = document.getElementById('privacyError');
+        if (!privacy.checked) {
+          error.textContent = 'Debes aceptar la política de tratamiento de datos.';
+          return false;
+        }
+        error.textContent = '';
+        return true;
+      }
+
+      cedula.addEventListener('input', () => {
+        digitsOnly(cedula);
+        validateCedula(false);
+        if (cedula.classList.contains('invalid')) validateCedula(true);
+      });
+
+      telefono.addEventListener('input', () => {
+        digitsOnly(telefono);
+        if (telefono.classList.contains('invalid')) validatePhone();
+      });
+
+      nombres.addEventListener('input', () => {
+        lettersAndSpacesOnly(nombres);
+        if (nombres.classList.contains('invalid')) validateName(nombres, 'Nombres');
+      });
+
+      apellidos.addEventListener('input', () => {
+        lettersAndSpacesOnly(apellidos);
+        if (apellidos.classList.contains('invalid')) validateName(apellidos, 'Apellidos');
+      });
+
+      privacy.addEventListener('change', validatePrivacy);
+
+      continueBtn.addEventListener('click', () => {
+        if (validateCedula(true)) showStep(1);
+      });
+
+      backBtn.addEventListener('click', () => showStep(0));
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (isSubmitting) return;
+
+        const valid =
+          validateCedula(true) &&
+          validateName(nombres, 'Nombres') &&
+          validateName(apellidos, 'Apellidos') &&
+          validatePhone() &&
+          validatePrivacy();
+
+        if (!valid) {
+          const firstInvalid = form.querySelector('.invalid');
+          if (firstInvalid) firstInvalid.focus();
+          return;
+        }
+
+        isSubmitting = true;
+        submitBtn.disabled = true;
+        submitBtn.classList.add('is-loading');
+
+        // Aquí puedes integrar posteriormente un backend seguro.
+        // Por seguridad, este ejemplo no envía ni almacena datos.
+        setTimeout(() => {
+          submitBtn.classList.remove('is-loading');
+          submitBtn.disabled = false;
+          isSubmitting = false;
+          showStep(2);
+        }, 900);
+      });
+
+      restartBtn.addEventListener('click', () => {
+        form.reset();
+        [cedula, nombres, apellidos, telefono].forEach(input => setError(input, ''));
+        document.getElementById('privacyError').textContent = '';
+        continueBtn.disabled = true;
+        showStep(0);
+      });
+
+      document.querySelectorAll('[data-modal]').forEach(button => {
+        button.addEventListener('click', event => {
+          event.preventDefault();
+          const dialog = document.getElementById(button.dataset.modal);
+          if (dialog && typeof dialog.showModal === 'function') dialog.showModal();
+        });
+      });
+
+      document.querySelectorAll('dialog').forEach(dialog => {
+        dialog.querySelector('.modal-close').addEventListener('click', () => dialog.close());
+        dialog.addEventListener('click', event => {
+          const rect = dialog.getBoundingClientRect();
+          const outside =
+            event.clientX < rect.left ||
+            event.clientX > rect.right ||
+            event.clientY < rect.top ||
+            event.clientY > rect.bottom;
+          if (outside) dialog.close();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
